@@ -1,4 +1,4 @@
-module.exports = function solveSudoku(matrix) {
+  module.exports = function solveSudoku(matrix) {
   let repeatCheck = Array([9]);
 
      const checkout = () => {
@@ -6,7 +6,7 @@ module.exports = function solveSudoku(matrix) {
 
      };
 
-     const rowVal = (row) => {
+     const rowValue = (row) => {
          checkout();
          for (let column = 0; column < 9; column++) {
              if (matrix[row][column] != 0) {
@@ -18,7 +18,7 @@ module.exports = function solveSudoku(matrix) {
          return true;
      }
 
-     const colVal = (column) => {
+     const columnValue = (column) => {
          checkout();
          for (let row = 0; row < 9; row++) {
              if (matrix[row][column] != 0) {
@@ -45,7 +45,7 @@ module.exports = function solveSudoku(matrix) {
          return true;
      }
 
-     const advSolv =(row, column) =>
+     const Solution =(row, column) =>
      {
          while (row < 9 && matrix[row][column] != 0) {
              column++;
@@ -58,9 +58,9 @@ module.exports = function solveSudoku(matrix) {
 
          for (let k = 1; k <= 9; k++) {
              matrix[row][column] = k;
-             if (rowVal(row) && colVal(column)
+             if (rowValue(row) && columnValue(column)
                  && validBlock(row - row%3, column - column%3)
-                 && advSolv(row, column))
+                 && Solution(row, column))
                  return true;
          }
 
@@ -68,7 +68,8 @@ module.exports = function solveSudoku(matrix) {
          return false;
      }
 
-     advSolv(0, 0);
+     Solution(0, 0);
  return matrix;
 
 };
+
