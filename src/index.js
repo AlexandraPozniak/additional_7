@@ -1,75 +1,46 @@
-  module.exports = function solveSudoku(matrix) {
-  let repeatCheck = Array([9]);
+ module.exports = function solveSudoku(matrix) {
 
-     const checkout = () => {
-         for (let i = 1; i <= 9; i++) repeatCheck[i] = false;
+    function check(num, row, col) {
+        for (var i = 0; i < 9; i++) {
+            var index = ((Math.floor(row / 3) * 3) + Math.floor(i / 3)) * 9 + (Math.floor(col / 3) * 3) + (i % 3);
 
-     };
+            if (num == matrix[(row * 9) + i] || num == matrix[col + (i * 9)] || num == matrix[index]) {
+                return false;
+            }
+        }
 
-     const rowValue = (row) => {
-         checkout();
-         for (let column = 0; column < 9; column++) {
-             if (matrix[row][column] != 0) {
-                 if (repeatCheck[matrix[row][column]])
-                     return false;
-                 repeatCheck[matrix[row][column]] = true;
-             }
-         }
-         return true;
-     }
+        return true;
+    }
 
-     const columnValue = (column) => {
-         checkout();
-         for (let row = 0; row < 9; row++) {
-             if (matrix[row][column] != 0) {
-                 if (repeatCheck[matrix[row][column]])
-                     return false;
-                 repeatCheck[matrix[row][column]] = true;
-             }
-         }
-         return true;
-     }
+    function resolve(index) {
+        if (index >= matrix.length) {
+            return true;
+        } else if (matrix[index] != 0) {
+            return resolve(index + 1);
+        }
 
-     const validBlock = (frRow, frCol) =>
-     {
-         checkout();
-         for (let row = frRow; row < frRow+3; row++) {
-             for (let column = frCol; column < frCol+3; column++) {
-                 if (matrix[row][column] != 0) {
-                     if (repeatCheck[matrix[row][column]])
-                         return false;
-                     repeatCheck[matrix[row][column]] = true;
-                 }
-             }
-         }
-         return true;
-     }
+        for (var i = 1; i <= 9; i++) {
+            if (check(i, Math.floor(index / 9), index % 9)) {
+                matrix[index] = i;
 
-     const Solution =(row, column) =>
-     {
-         while (row < 9 && matrix[row][column] != 0) {
-             column++;
-             if (column == 9) {
-                 row++;
-                 column = 0;
-             }
-         }
-         if (row == 9) return true;
+                if (resolve(index + 1)) {
+                    return true;
+                }
+            }
+        }
 
-         for (let k = 1; k <= 9; k++) {
-             matrix[row][column] = k;
-             if (rowValue(row) && columnValue(column)
-                 && validBlock(row - row%3, column - column%3)
-                 && Solution(row, column))
-                 return true;
-         }
+        matrix[index] = 0;
+        return false;
+    }
 
-         matrix[row][column] = 0;
-         return false;
-     }
+    matrix = matrix.reduce((prev, curr) => prev.concat(curr));
+    resolve(0);
 
-     Solution(0, 0);
- return matrix;
+    var result = [];
+    for (var i = 0; i < matrix.length; i += 9) {
+        result.push(matrix.slice(i, i + 9))
+    }
 
-};
+    return result;
+}
 
